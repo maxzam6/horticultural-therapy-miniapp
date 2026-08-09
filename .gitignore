@@ -24,10 +24,12 @@ Thumbs.db
 *.temp
 coverage/
 
+# Unused scaffold asset
+src/static/logo.png
+
 # Local material archives and historical drafts
 *.zip
 *.rar
 *.7z
 *_v1.1.md
 *_v3.0.md
-

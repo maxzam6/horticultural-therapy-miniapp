@@ -26,6 +26,37 @@
 4. [UI 参考图](design/references)
 5. [协作与分支规范](CONTRIBUTING.md)
 
+## 本地启动
+
+推荐环境：
+
+- Node.js 20 LTS（仓库提供 `.nvmrc`）
+- pnpm 11
+- 微信开发者工具
+
+```bash
+pnpm install
+pnpm dev:mp-weixin
+```
+
+生产构建验证：
+
+```bash
+pnpm build:mp-weixin
+```
+
+构建产物位于 `dist/build/mp-weixin`，使用微信开发者工具导入该目录即可运行。正式真机体验前，在 `src/manifest.json` 的 `mp-weixin.appid` 中填写项目 AppID；不要提交 appSecret 或本地私有配置。
+
+## 当前源码状态
+
+- uni-app Vue 3/Vite 工程已初始化。
+- 14 个 PRD 页面路由与 5 个 Tab 已注册。
+- 全局自然色板、公共页面壳和基础样式已建立。
+- Pinia 用户、评估、体验 Store 已建立。
+- Mock 用户、10 道状态探索题、5 个课程和示例记录已建立。
+- 统一导航和 Mock Data Adapter 已建立。
+- 页面当前为可编译、可导航的工程骨架，具体业务功能按开发任务文档继续实现。
+
 ## MVP 边界
 
 - P0-A：完成首页至自然印记的核心体验闭环。
@@ -44,4 +75,3 @@
 ```
 
 具体任务、字段契约与验收清单见 `docs/01_开发任务拆解与首周Demo.md`。
-

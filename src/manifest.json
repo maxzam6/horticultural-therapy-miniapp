@@ -1,0 +1,21 @@
+{
+  "name": "园艺疗法",
+  "appid": "",
+  "description": "护理学院大创园艺疗法数字化体验小程序",
+  "versionName": "0.1.0",
+  "versionCode": "10",
+  "transformPx": false,
+  "mp-weixin": {
+    "appid": "",
+    "setting": {
+      "urlCheck": false,
+      "es6": true,
+      "minified": true
+    },
+    "usingComponents": true
+  },
+  "uniStatistics": {
+    "enable": false
+  },
+  "vueVersion": "3"
+}

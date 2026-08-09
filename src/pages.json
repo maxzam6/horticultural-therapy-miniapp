@@ -1,0 +1,123 @@
+{
+  "pages": [
+    {
+      "path": "pages/home/index",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/auth/index",
+      "style": {
+        "navigationBarTitleText": "开启体验"
+      }
+    },
+    {
+      "path": "pages/profile/setup",
+      "style": {
+        "navigationBarTitleText": "自然档案"
+      }
+    },
+    {
+      "path": "pages/assessment/intro",
+      "style": {
+        "navigationBarTitleText": "状态探索"
+      }
+    },
+    {
+      "path": "pages/assessment/questions",
+      "style": {
+        "navigationBarTitleText": "状态探索"
+      }
+    },
+    {
+      "path": "pages/assessment/result",
+      "style": {
+        "navigationBarTitleText": "状态报告"
+      }
+    },
+    {
+      "path": "pages/explore/index",
+      "style": {
+        "navigationBarTitleText": "探索"
+      }
+    },
+    {
+      "path": "pages/garden/index",
+      "style": {
+        "navigationBarTitleText": "五感花园"
+      }
+    },
+    {
+      "path": "pages/course/detail",
+      "style": {
+        "navigationBarTitleText": "自然体验"
+      }
+    },
+    {
+      "path": "pages/experience/task",
+      "style": {
+        "navigationBarTitleText": "体验任务"
+      }
+    },
+    {
+      "path": "pages/imprint/detail",
+      "style": {
+        "navigationBarTitleText": "自然印记"
+      }
+    },
+    {
+      "path": "pages/records/index",
+      "style": {
+        "navigationBarTitleText": "记录"
+      }
+    },
+    {
+      "path": "pages/community/index",
+      "style": {
+        "navigationBarTitleText": "自然分享空间"
+      }
+    },
+    {
+      "path": "pages/mine/index",
+      "style": {
+        "navigationBarTitleText": "我的"
+      }
+    }
+  ],
+  "tabBar": {
+    "color": "#8A9387",
+    "selectedColor": "#506A45",
+    "backgroundColor": "#FFFDF8",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/explore/index",
+        "text": "探索"
+      },
+      {
+        "pagePath": "pages/records/index",
+        "text": "记录"
+      },
+      {
+        "pagePath": "pages/community/index",
+        "text": "社区"
+      },
+      {
+        "pagePath": "pages/mine/index",
+        "text": "我的"
+      }
+    ]
+  },
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "园艺疗法",
+    "navigationBarBackgroundColor": "#F7F4EA",
+    "backgroundColor": "#F7F4EA",
+    "backgroundTextStyle": "dark"
+  }
+}
