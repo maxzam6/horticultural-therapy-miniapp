@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+unpackage/
+.output/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+project.private.config.json
+
+# Editor and OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+coverage/
+
+# Local material archives and historical drafts
+*.zip
+*.rar
+*.7z
+*_v1.1.md
+*_v3.0.md
+
