@@ -1,4 +1,7 @@
 <script setup>
+import AppButton from './AppButton.vue'
+import AppCard from './AppCard.vue'
+
 defineProps({
   eyebrow: {
     type: String,
@@ -43,19 +46,21 @@ defineEmits(['primary'])
     <text class="page-shell__title">{{ title }}</text>
     <text v-if="description" class="page-shell__description">{{ description }}</text>
 
-    <view class="surface-card page-shell__status">
-      <text class="page-shell__status-label">当前状态</text>
-      <text class="page-shell__status-value">{{ status }}</text>
-      <slot />
+    <view class="page-shell__status">
+      <AppCard>
+        <view class="page-shell__status-content">
+          <text class="page-shell__status-label">当前状态</text>
+          <text class="page-shell__status-value">{{ status }}</text>
+          <slot />
+        </view>
+      </AppCard>
     </view>
 
-    <button
-      v-if="buttonLabel"
-      class="primary-button page-shell__button"
-      @click="$emit('primary')"
-    >
-      {{ buttonLabel }}
-    </button>
+    <view v-if="buttonLabel" class="page-shell__button">
+      <AppButton @click="$emit('primary')">
+        {{ buttonLabel }}
+      </AppButton>
+    </view>
   </view>
 </template>
 
@@ -125,11 +130,13 @@ defineEmits(['primary'])
 }
 
 .page-shell__status {
+  margin-top: var(--space-6);
+}
+
+.page-shell__status-content {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  margin-top: var(--space-6);
-  padding: var(--space-4);
 }
 
 .page-shell__status-label {
