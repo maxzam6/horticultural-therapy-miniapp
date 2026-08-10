@@ -13,7 +13,10 @@ onLoad((options) => {
   if (options?.id) courseId.value = options.id
 })
 
-const startTask = () => goTo(`${ROUTES.EXPERIENCE_TASK}?courseId=${course.value.id}`)
+const startTask = () => {
+  const sessionId = `mock-session-${course.value.id}`
+  goTo(`${ROUTES.EXPERIENCE_TASK}?sessionId=${encodeURIComponent(sessionId)}`)
+}
 </script>
 
 <template>

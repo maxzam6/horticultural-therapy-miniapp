@@ -24,8 +24,9 @@
 2. [开发任务拆解与首周 Demo](docs/01_开发任务拆解与首周Demo.md)
 3. [两人合作开发时序图](docs/02_两人合作开发时序图.md)
 4. [第三阶段公共基础设施任务单](docs/03_第三阶段公共基础设施任务单.md)
-5. [UI 参考图](design/references)
-6. [协作与分支规范](CONTRIBUTING.md)
+5. [路由与 Tab 基线](docs/04_路由与Tab基线.md)
+6. [UI 参考图](design/references)
+7. [协作与分支规范](CONTRIBUTING.md)
 
 ## 本地启动
 
