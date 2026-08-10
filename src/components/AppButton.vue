@@ -26,7 +26,10 @@ function handleClick(event) {
 <template>
   <button
     class="app-button"
-    :class="`app-button--${variant}`"
+    :class="[
+      `app-button--${variant}`,
+      { 'app-button--disabled': disabled || loading },
+    ]"
     :disabled="disabled || loading"
     :loading="loading"
     @click="handleClick"
@@ -65,7 +68,7 @@ function handleClick(event) {
   transform: scale(0.98);
 }
 
-.app-button[disabled] {
+.app-button--disabled {
   opacity: 0.45;
 }
 </style>
