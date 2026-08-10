@@ -8,7 +8,7 @@ const startExperience = () => goTo(ROUTES.AUTH)
 
 <template>
   <AppPageShell
-    class="home-page"
+    custom-navigation
     eyebrow="园艺疗法"
     title="连接自然，关注当下"
     description="从一次轻量的状态探索开始，走进五感花园，留下属于你的自然印记。"
@@ -25,22 +25,18 @@ const startExperience = () => goTo(ROUTES.AUTH)
 </template>
 
 <style lang="scss" scoped>
-.home-page {
-  padding-top: calc(var(--status-bar-height) + 40rpx);
-}
-
 .home-points {
   display: flex;
   flex-wrap: wrap;
-  gap: 12rpx;
-  margin-top: 16rpx;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
   color: var(--color-text-secondary);
-  font-size: 24rpx;
+  font-size: var(--font-size-caption);
 }
 
 .home-points text {
-  padding: 8rpx 16rpx;
-  border-radius: 18rpx;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-tag);
   background: var(--color-bg-soft);
 }
 </style>

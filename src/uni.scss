@@ -1,9 +1,38 @@
+/* Sass variables are auto-injected into every uni-app page/component. */
 $color-primary: #6f8f5f;
 $color-primary-deep: #506a45;
 $color-primary-light: #a9be9d;
 $color-background: #f7f4ea;
+$color-background-soft: #eef3e7;
 $color-surface: #fffdf8;
+$color-accent-warm: #d5a75d;
+$color-accent-soft: #e8d9b9;
 $color-text: #2f3b2e;
 $color-text-secondary: #657064;
+$color-text-muted: #8a9387;
+$color-border: #e2e6da;
+$color-success: #6f9a68;
+$color-warning: #c99b52;
+$color-danger: #b66b63;
+
+$font-size-hero: 52rpx;
+$font-size-page-title: 44rpx;
+$font-size-section-title: 36rpx;
+$font-size-card-title: 32rpx;
+$font-size-body: 28rpx;
+$font-size-caption: 24rpx;
+
+$space-1: 8rpx;
+$space-2: 16rpx;
+$space-3: 24rpx;
+$space-4: 32rpx;
+$space-5: 40rpx;
+$space-6: 48rpx;
+$space-8: 64rpx;
+
 $page-gutter: 32rpx;
-$card-radius: 32rpx;
+$radius-tag: 16rpx;
+$radius-button: 28rpx;
+$radius-card: 32rpx;
+$radius-hero: 40rpx;
+$shadow-card: 0 8rpx 24rpx rgba(74, 92, 68, 0.08);

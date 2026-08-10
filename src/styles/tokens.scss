@@ -1,5 +1,6 @@
 :root,
 page {
+  /* Botanical color system */
   --color-primary: #6f8f5f;
   --color-primary-deep: #506a45;
   --color-primary-light: #a9be9d;
@@ -7,10 +8,51 @@ page {
   --color-bg-soft: #eef3e7;
   --color-surface: #fffdf8;
   --color-accent-warm: #d5a75d;
+  --color-accent-soft: #e8d9b9;
   --color-text: #2f3b2e;
   --color-text-secondary: #657064;
   --color-text-muted: #8a9387;
   --color-border: #e2e6da;
+  --color-success: #6f9a68;
+  --color-warning: #c99b52;
+  --color-danger: #b66b63;
+  --color-on-primary: #fffdf8;
+
+  /* Typography */
+  --font-size-hero: 52rpx;
+  --font-size-page-title: 44rpx;
+  --font-size-section-title: 36rpx;
+  --font-size-card-title: 32rpx;
+  --font-size-body: 28rpx;
+  --font-size-body-small: 26rpx;
+  --font-size-caption: 24rpx;
+  --font-size-label: 22rpx;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --line-height-tight: 1.3;
+  --line-height-body: 1.65;
+
+  /* Spacing rhythm */
+  --space-1: 8rpx;
+  --space-2: 16rpx;
+  --space-3: 24rpx;
+  --space-4: 32rpx;
+  --space-5: 40rpx;
+  --space-6: 48rpx;
+  --space-8: 64rpx;
+
+  /* Shape and elevation */
+  --radius-tag: 16rpx;
+  --radius-button: 28rpx;
+  --radius-card: 32rpx;
+  --radius-hero: 40rpx;
+  --shadow-card: 0 8rpx 24rpx rgba(74, 92, 68, 0.08);
+  --shadow-card-pressed: 0 4rpx 12rpx rgba(74, 92, 68, 0.06);
+
+  /* Layout */
   --page-gutter: 32rpx;
-  --card-radius: 32rpx;
+  --control-height: 88rpx;
+  --touch-target-min: 80rpx;
+  --safe-bottom: env(safe-area-inset-bottom);
 }

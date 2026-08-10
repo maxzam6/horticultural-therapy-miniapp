@@ -16,7 +16,7 @@ const openCourse = (courseId) => goTo(`${ROUTES.COURSE_DETAIL}?id=${courseId}`)
       <view
         v-for="course in mockCourses"
         :key="course.id"
-        class="surface-card course-card"
+        class="surface-card surface-card--interactive course-card"
         @click="openCourse(course.id)"
       >
         <text class="course-card__sense">{{ course.senseName }}</text>
@@ -30,50 +30,51 @@ const openCourse = (courseId) => goTo(`${ROUTES.COURSE_DETAIL}?id=${courseId}`)
 <style lang="scss" scoped>
 .garden-page__eyebrow {
   color: var(--color-primary-deep);
-  font-size: 24rpx;
-  font-weight: 600;
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
   letter-spacing: 4rpx;
 }
 
 .garden-page__title {
   display: block;
-  margin-top: 12rpx;
-  font-size: 44rpx;
-  font-weight: 600;
-  line-height: 1.3;
+  margin-top: var(--space-2);
+  font-size: var(--font-size-page-title);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
 }
 
 .garden-page__description {
   display: block;
-  margin-top: 20rpx;
+  margin-top: var(--space-3);
   color: var(--color-text-secondary);
 }
 
 .garden-page__list {
   display: grid;
-  gap: 24rpx;
-  margin-top: 40rpx;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
 }
 
 .course-card {
   display: flex;
   align-items: center;
-  padding: 28rpx 32rpx;
+  min-height: var(--touch-target-min);
+  padding: var(--space-3) var(--space-4);
 }
 
 .course-card__sense {
   min-width: 72rpx;
   color: var(--color-primary-deep);
-  font-size: 24rpx;
+  font-size: var(--font-size-caption);
 }
 
 .course-card__title {
   flex: 1;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 
 .course-card__action {
   color: var(--color-text-muted);
-  font-size: 24rpx;
+  font-size: var(--font-size-caption);
 }
 </style>

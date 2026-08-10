@@ -20,13 +20,20 @@ defineProps({
     type: String,
     default: '',
   },
+  customNavigation: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 defineEmits(['primary'])
 </script>
 
 <template>
-  <view class="page-container page-shell">
+  <view
+    class="page-container page-shell"
+    :class="{ 'page-container--custom-nav': customNavigation }"
+  >
     <view class="page-shell__botanical">
       <view class="page-shell__stem" />
       <view class="page-shell__leaf page-shell__leaf--left" />
@@ -62,7 +69,7 @@ defineEmits(['primary'])
   position: relative;
   width: 64rpx;
   height: 64rpx;
-  margin-bottom: 24rpx;
+  margin-bottom: var(--space-3);
 }
 
 .page-shell__stem {
@@ -98,44 +105,45 @@ defineEmits(['primary'])
 
 .page-shell__eyebrow {
   color: var(--color-primary-deep);
-  font-size: 24rpx;
-  font-weight: 600;
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
   letter-spacing: 4rpx;
 }
 
 .page-shell__title {
-  margin-top: 12rpx;
+  margin-top: var(--space-2);
   color: var(--color-text);
-  font-size: 48rpx;
-  font-weight: 600;
-  line-height: 1.25;
+  font-size: var(--font-size-hero);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
 }
 
 .page-shell__description {
-  margin-top: 20rpx;
+  margin-top: var(--space-3);
   color: var(--color-text-secondary);
+  line-height: var(--line-height-body);
 }
 
 .page-shell__status {
   display: flex;
   flex-direction: column;
-  gap: 12rpx;
-  margin-top: 48rpx;
-  padding: 32rpx;
+  gap: var(--space-2);
+  margin-top: var(--space-6);
+  padding: var(--space-4);
 }
 
 .page-shell__status-label {
   color: var(--color-text-muted);
-  font-size: 24rpx;
+  font-size: var(--font-size-caption);
 }
 
 .page-shell__status-value {
   color: var(--color-primary-deep);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 
 .page-shell__button {
   width: 100%;
-  margin-top: 40rpx;
+  margin-top: var(--space-5);
 }
 </style>

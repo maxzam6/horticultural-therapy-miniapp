@@ -5,16 +5,24 @@ page {
   background: var(--color-bg);
   color: var(--color-text);
   font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  font-size: 28rpx;
-  line-height: 1.6;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
 }
 
 view,
 text,
 button,
 input,
-textarea {
+textarea,
+image {
   box-sizing: border-box;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
 }
 
 button::after {
@@ -23,31 +31,88 @@ button::after {
 
 .page-container {
   min-height: 100vh;
-  padding: 40rpx var(--page-gutter) calc(64rpx + env(safe-area-inset-bottom));
+  padding: var(--space-5) var(--page-gutter)
+    calc(var(--space-8) + var(--safe-bottom));
+  background: var(--color-bg);
+}
+
+.page-container--custom-nav {
+  padding-top: calc(var(--status-bar-height) + var(--space-5));
+}
+
+.safe-bottom {
+  padding-bottom: calc(var(--space-4) + var(--safe-bottom));
 }
 
 .surface-card {
   border: 1rpx solid var(--color-border);
-  border-radius: var(--card-radius);
+  border-radius: var(--radius-card);
   background: var(--color-surface);
-  box-shadow: 0 8rpx 24rpx rgba(74, 92, 68, 0.08);
+  box-shadow: var(--shadow-card);
 }
 
-.primary-button {
+.surface-card--interactive:active {
+  box-shadow: var(--shadow-card-pressed);
+  opacity: 0.96;
+  transform: scale(0.99);
+}
+
+.page-title {
+  color: var(--color-text);
+  font-size: var(--font-size-page-title);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+}
+
+.section-title {
+  color: var(--color-text);
+  font-size: var(--font-size-section-title);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+}
+
+.body-text {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+}
+
+.caption-text {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-caption);
+}
+
+.primary-button,
+.secondary-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 88rpx;
+  min-height: var(--control-height);
   margin: 0;
-  border-radius: 28rpx;
-  background: var(--color-primary);
-  color: #fff;
-  font-size: 28rpx;
-  font-weight: 600;
+  border-radius: var(--radius-button);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
   line-height: 1;
+  transition: opacity 120ms ease, transform 120ms ease;
 }
 
-.primary-button:active {
+.primary-button {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.secondary-button {
+  background: var(--color-bg-soft);
+  color: var(--color-primary-deep);
+}
+
+.primary-button:active,
+.secondary-button:active {
   opacity: 0.9;
   transform: scale(0.98);
+}
+
+.primary-button[disabled],
+.secondary-button[disabled] {
+  opacity: 0.45;
 }
