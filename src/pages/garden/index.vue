@@ -1,11 +1,21 @@
 <script setup>
+import { onShow } from '@dcloudio/uni-app'
 import AppCard from '@/components/AppCard.vue'
 import AppSectionHeader from '@/components/AppSectionHeader.vue'
-import { mockCourses } from '@/mock'
 import { ROUTES } from '@/config/routes'
 import { goTo } from '@/services/navigation'
+import { useExperienceStore } from '@/stores/experience'
 
-const openCourse = (courseId) => goTo(`${ROUTES.COURSE_DETAIL}?id=${courseId}`)
+const experienceStore = useExperienceStore()
+
+onShow(() => {
+  experienceStore.loadCourses()
+})
+
+const openCourse = (courseId) => {
+  experienceStore.selectCourse(courseId)
+  goTo(`${ROUTES.COURSE_DETAIL}?id=${courseId}`)
+}
 </script>
 
 <template>
@@ -20,7 +30,7 @@ const openCourse = (courseId) => goTo(`${ROUTES.COURSE_DETAIL}?id=${courseId}`)
 
     <view class="garden-page__list">
       <AppCard
-        v-for="course in mockCourses"
+        v-for="course in experienceStore.courses"
         :key="course.id"
         interactive
         padding="none"

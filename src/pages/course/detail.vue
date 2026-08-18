@@ -3,14 +3,21 @@ import { computed, ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import AppPageShell from '@/components/AppPageShell.vue'
 import { ROUTES } from '@/config/routes'
-import { mockCourses } from '@/mock'
 import { goTo } from '@/services/navigation'
+import { useExperienceStore } from '@/stores/experience'
 
 const courseId = ref('course-succulent')
-const course = computed(() => mockCourses.find((item) => item.id === courseId.value) || mockCourses[1])
+const experienceStore = useExperienceStore()
+const course = computed(() => (
+  experienceStore.courses.find((item) => item.id === courseId.value)
+  || experienceStore.courses[0]
+  || { id: courseId.value, senseName: '自然体验', title: '园艺体验' }
+))
 
-onLoad((options) => {
+onLoad(async (options) => {
   if (options?.id) courseId.value = options.id
+  experienceStore.selectCourse(courseId.value)
+  await experienceStore.loadCourses()
 })
 
 const startTask = () => {
