@@ -14,6 +14,7 @@ export const useExperienceStore = defineStore('experience', {
   actions: {
     async loadCourses() { this.courses = await dataAdapter.getCourses(); return this.courses },
     selectCourse(courseId) { this.activeCourseId = courseId },
+    setActiveSession(session) { this.activeSession = session },
     async loadRecords() { this.records = await dataAdapter.getRecords(); return this.records },
     addRecord(record) { this.records = [record, ...this.records.filter((item) => item.id !== record.id)] },
     resetExperience() { this.activeCourseId = null; this.activeSession = null; this.error = null },
