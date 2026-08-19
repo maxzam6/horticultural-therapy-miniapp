@@ -17,9 +17,7 @@ const progress = computed(() => assessmentStore.questions.length
 const selectedValue = computed(() => question.value && assessmentStore.answers[question.value.code])
 const isLastQuestion = computed(() => assessmentStore.currentIndex === assessmentStore.questions.length - 1)
 const isSubmitting = computed(() => assessmentStore.submissionStatus === 'submitting')
-const hasCompletedResult = computed(() => (
-  assessmentStore.submissionStatus === 'succeeded' && Boolean(assessmentStore.result)
-))
+const hasCompletedResult = computed(() => Boolean(assessmentStore.result))
 
 async function load() {
   if (!assessmentStore.questions.length) await assessmentStore.loadQuestions()
