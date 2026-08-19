@@ -16,7 +16,7 @@ const mockAdapter = {
     return getStorage(STORAGE_KEYS.user, clone(mockUser))
   },
   async mockLogin() {
-    const user = clone(mockUser)
+    const user = getStorage(STORAGE_KEYS.user, null) || clone(mockUser)
     await setStorage(STORAGE_KEYS.user, user)
     return user
   },
