@@ -13,9 +13,9 @@ const props = defineProps({
 
 const emit = defineEmits(['click'])
 
-function handleClick(event) {
+function handleClick() {
   if (!props.interactive) return
-  emit('click', event)
+  emit('click')
 }
 </script>
 
@@ -25,6 +25,7 @@ function handleClick(event) {
     :class="[`app-card--${padding}`, { 'app-card--interactive': interactive }]"
     :hover-class="interactive ? 'app-card--pressed' : 'none'"
     :hover-stay-time="120"
+    data-eventsync="true"
     @click="handleClick"
   >
     <slot />

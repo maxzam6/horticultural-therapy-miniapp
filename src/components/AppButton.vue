@@ -17,9 +17,9 @@ const props = defineProps({
 
 const emit = defineEmits(['click'])
 
-function handleClick(event) {
+function handleClick() {
   if (props.disabled || props.loading) return
-  emit('click', event)
+  emit('click')
 }
 </script>
 
@@ -32,6 +32,7 @@ function handleClick(event) {
     ]"
     :disabled="disabled || loading"
     :loading="loading"
+    data-eventsync="true"
     @click="handleClick"
   >
     <slot />
