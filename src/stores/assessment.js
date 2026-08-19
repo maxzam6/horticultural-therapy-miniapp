@@ -19,6 +19,10 @@ export const useAssessmentStore = defineStore('assessment', {
     goPrevious() { this.currentIndex = Math.max(0, this.currentIndex - 1) },
     goNext() { this.currentIndex = Math.min(this.questions.length - 1, this.currentIndex + 1) },
     setResult(result) { this.result = result; this.submissionStatus = 'succeeded' },
+    async loadLatestResult() {
+      this.result = await dataAdapter.getLatestAssessment()
+      return this.result
+    },
     reset() {
       this.answers = {}
       this.result = null
