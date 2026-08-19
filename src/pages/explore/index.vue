@@ -50,7 +50,12 @@ const openGarden = () => goTo(ROUTES.GARDEN)
 onShow(async () => {
   isLoading.value = true
   try {
+    const latestAssessmentRequest = assessmentStore.result
+      ? Promise.resolve(assessmentStore.result)
+      : assessmentStore.loadLatestResult()
+
     await Promise.allSettled([
+      latestAssessmentRequest,
       userStore.loadCurrentUser(),
       experienceStore.loadCourses(),
       experienceStore.loadRecords(),
