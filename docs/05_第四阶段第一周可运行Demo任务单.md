@@ -72,7 +72,7 @@ pnpm build:mp-weixin
 | `src/mock/assessment-questions.js` | B | 保持 10 题与三维度契约 |
 | `src/services/data-adapter.js` | B | 已冻结接口不改名；确需变更先报告 |
 | `src/pages.json`、`src/config/routes.js` | 冻结 | 本阶段不增删路由、Tab 或参数 |
-| `package.json`、锁文件 | 冻结 | 本阶段原则上不新增依赖 |
+| `package.json`、锁文件 | B（受限） | 只允许新增 `check:assessment` 自检脚本，不新增依赖 |
 
 页面仍然禁止直接导入 `src/mock/**`，业务数据统一经 Store 和 Data Adapter 获取。
 
@@ -207,7 +207,7 @@ pnpm build:mp-weixin
 - `experienceOverviewScore = 0.4 × emotion + 0.3 × (100 - stress) + 0.3 × nature`，最终取整。
 - 输出推荐课程 ID，当前演示默认可落到 `course-succulent`。
 - 代码、UI、注释和数据中不得出现 `balanceIndex`。
-- 增加可重复执行的评分自检，固定答案输入应得到固定输出。
+- 增加 `pnpm check:assessment` 评分自检命令，固定答案输入应得到固定输出；不引入测试框架依赖。
 
 验收：同一组答案始终得到同一结果，缺题或非法答案返回可处理错误而不是错误报告。
 
@@ -287,7 +287,7 @@ feat(garden): complete A031 five-senses garden
 - [ ] `pnpm install --offline` 成功。
 - [ ] `pnpm peers check` 成功。
 - [ ] `pnpm check:mock` 成功。
-- [ ] 评分 Service 自检成功。
+- [ ] `pnpm check:assessment` 成功。
 - [ ] `pnpm build:mp-weixin` 成功。
 - [ ] P01 至 P08 连续走通至少两遍。
 - [ ] 第二遍档案与最近评估能够恢复。
