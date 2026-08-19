@@ -7,10 +7,11 @@ import {
 import { getStorage, setStorage, STORAGE_KEYS } from './storage'
 
 const clone = (value) => JSON.parse(JSON.stringify(value))
+const realAdapterError = () => new Error('Real Adapter尚未配置')
 
 export const dataMode = import.meta.env.VITE_DATA_MODE || 'mock'
 
-export const dataAdapter = {
+const mockAdapter = {
   async getCurrentUser() {
     return getStorage(STORAGE_KEYS.user, clone(mockUser))
   },
@@ -59,3 +60,28 @@ export const dataAdapter = {
     return records.find((record) => record.id === recordId) || null
   },
 }
+
+const realAdapter = Object.fromEntries([
+  'getCurrentUser',
+  'mockLogin',
+  'saveUserProfile',
+  'getAssessmentQuestions',
+  'saveAssessmentSubmission',
+  'getLatestAssessment',
+  'getCourses',
+  'getCourseById',
+  'startExperienceSession',
+  'completeExperienceSession',
+  'getRecords',
+  'getRecordById',
+].map((name) => [name, async () => { throw realAdapterError() }]))
+
+let selectedAdapter = mockAdapter
+if (dataMode === 'real') {
+  selectedAdapter = realAdapter
+} else if (dataMode !== 'mock') {
+  if (import.meta.env.DEV) console.warn(`[园艺疗法] 未知 VITE_DATA_MODE: ${dataMode}，开发环境回退 Mock Adapter`)
+}
+
+export { mockAdapter, realAdapter }
+export const dataAdapter = selectedAdapter
