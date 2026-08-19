@@ -1,12 +1,9 @@
 import { defineStore } from 'pinia'
-import { mockUser } from '@/mock'
 import { dataAdapter } from '@/services/data-adapter'
-
-const cloneMockUser = () => JSON.parse(JSON.stringify(mockUser))
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-    user: cloneMockUser(),
+    user: null,
     isAuthenticated: false,
     loading: false,
     error: null,
@@ -19,15 +16,26 @@ export const useUserStore = defineStore('user', {
       catch (error) { this.error = error; throw error }
       finally { this.loading = false }
     },
-    startMockSession() {
-      this.user = cloneMockUser()
-      this.isAuthenticated = true
+    async startMockSession() {
+      this.loading = true
+      this.error = null
+      try {
+        this.user = await dataAdapter.mockLogin()
+        this.isAuthenticated = true
+        return this.user
+      } catch (error) {
+        this.isAuthenticated = false
+        this.error = error
+        throw error
+      } finally {
+        this.loading = false
+      }
     },
     async saveProfile(profile) {
       this.user = await dataAdapter.saveUserProfile({ ...this.user, ...profile })
     },
     resetUser() {
-      this.user = cloneMockUser()
+      this.user = null
       this.isAuthenticated = false
       this.loading = false
       this.error = null
