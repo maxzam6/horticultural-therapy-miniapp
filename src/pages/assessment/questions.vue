@@ -17,6 +17,9 @@ const progress = computed(() => assessmentStore.questions.length
 const selectedValue = computed(() => question.value && assessmentStore.answers[question.value.code])
 const isLastQuestion = computed(() => assessmentStore.currentIndex === assessmentStore.questions.length - 1)
 const isSubmitting = computed(() => assessmentStore.submissionStatus === 'submitting')
+const hasCompletedResult = computed(() => (
+  assessmentStore.submissionStatus === 'succeeded' && Boolean(assessmentStore.result)
+))
 
 async function load() {
   if (!assessmentStore.questions.length) await assessmentStore.loadQuestions()
@@ -26,7 +29,7 @@ onMounted(load)
 onShow(load)
 
 function choose(value) {
-  if (isSubmitting.value) return
+  if (isSubmitting.value || hasCompletedResult.value) return
   assessmentStore.setAnswer(question.value.code, value)
 }
 
@@ -35,6 +38,10 @@ function previous() {
 }
 
 async function next() {
+  if (isLastQuestion.value && hasCompletedResult.value) {
+    goTo(ROUTES.ASSESSMENT_RESULT)
+    return
+  }
   if (!selectedValue.value) {
     uni.showToast({ title: '请先选择一个答案', icon: 'none' })
     return
@@ -85,8 +92,8 @@ async function next() {
 
     <view class="assessment-page__actions">
       <AppButton v-if="assessmentStore.currentIndex > 0" variant="secondary" @click="previous">上一题</AppButton>
-      <AppButton :loading="isSubmitting" :disabled="!selectedValue" @click="next">
-        {{ isLastQuestion ? '提交并查看报告' : '下一题' }}
+      <AppButton :loading="isSubmitting" :disabled="!selectedValue && !hasCompletedResult" @click="next">
+        {{ isLastQuestion && hasCompletedResult ? '查看状态报告' : isLastQuestion ? '提交并查看报告' : '下一题' }}
       </AppButton>
     </view>
   </view>
