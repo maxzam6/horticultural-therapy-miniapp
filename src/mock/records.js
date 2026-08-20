@@ -1,6 +1,7 @@
 export const mockRecords = [
   {
     id: 'record-demo-001',
+    sessionId: 'session-demo-001',
     userId: 'demo-user-001',
     courseId: 'course-succulent',
     courseTitle: '多肉种植体验',

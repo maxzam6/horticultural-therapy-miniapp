@@ -14,6 +14,7 @@
     "build:mp-weixin": "uni build -p mp-weixin",
     "check:mock": "node scripts/check-mock.mjs",
     "check:assessment": "node scripts/check-assessment.mjs",
+    "check:experience": "node scripts/check-experience.mjs",
     "check": "pnpm run build:mp-weixin"
   },
   "dependencies": {
