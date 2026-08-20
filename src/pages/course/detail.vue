@@ -14,7 +14,7 @@ const pageState = ref('loading')
 const pageError = ref('')
 const isStarting = ref(false)
 
-const course = computed(() => experienceStore.courses.find((item) => item.id === courseId.value) || null)
+const course = computed(() => experienceStore.activeCourse)
 const coverImage = computed(() => course.value?.cover || '/static/illustrations/sensory-garden.jpg')
 const steps = computed(() => Array.isArray(course.value?.steps) ? course.value.steps : [])
 const materials = computed(() => Array.isArray(course.value?.materials) ? course.value.materials : [])
@@ -33,7 +33,7 @@ async function loadCourse() {
   pageState.value = 'loading'
   pageError.value = ''
   try {
-    await experienceStore.loadCourses()
+    await experienceStore.loadCourse(courseId.value)
     pageState.value = course.value ? 'ready' : 'empty'
   } catch (error) {
     pageError.value = error?.message || '课程暂时没有加载成功，请稍后再试。'
@@ -50,19 +50,12 @@ function goBack() {
   uni.navigateBack()
 }
 
-function resolveSessionAction() {
-  return ['startSession', 'startExperienceSession', 'createSession']
-    .find((name) => typeof experienceStore[name] === 'function')
-}
-
 async function startTask() {
   if (isStarting.value || !course.value) return
   isStarting.value = true
   pageError.value = ''
   try {
-    const actionName = resolveSessionAction()
-    if (!actionName) throw new Error('体验 Session 服务尚未接入，请稍后再试。')
-    const session = await experienceStore[actionName](course.value.id)
+    const session = await experienceStore.startSession(courseId.value)
     const sessionId = session?.id || session?.sessionId
     if (!sessionId) throw new Error('体验 Session 创建失败，请稍后再试。')
     goTo(`${ROUTES.EXPERIENCE_TASK}?sessionId=${encodeURIComponent(sessionId)}`)

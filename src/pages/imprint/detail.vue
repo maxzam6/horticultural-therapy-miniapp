@@ -6,7 +6,6 @@ import AppCard from '@/components/AppCard.vue'
 import AppStateView from '@/components/AppStateView.vue'
 import { ROUTES } from '@/config/routes'
 import { goTo } from '@/services/navigation'
-import { dataAdapter } from '@/services/data-adapter'
 import { useExperienceStore } from '@/stores/experience'
 
 const experienceStore = useExperienceStore()
@@ -44,11 +43,7 @@ async function loadRecord() {
   }
 
   try {
-    const storeLoader = ['getRecordById', 'loadRecordById', 'loadRecord']
-      .find((name) => typeof experienceStore[name] === 'function')
-    record.value = storeLoader
-      ? await experienceStore[storeLoader](recordId.value)
-      : await dataAdapter.getRecordById(recordId.value)
+    record.value = await experienceStore.loadRecord(recordId.value)
     pageState.value = record.value ? 'ready' : 'empty'
   } catch (error) {
     pageError.value = error?.message || '自然印记暂时没有加载成功，请稍后再试。'
