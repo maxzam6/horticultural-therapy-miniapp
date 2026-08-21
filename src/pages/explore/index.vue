@@ -46,6 +46,7 @@ const progress = computed(() => {
 })
 
 const openGarden = () => goTo(ROUTES.GARDEN)
+const retakeAssessment = () => goTo(ROUTES.ASSESSMENT_INTRO)
 
 onShow(async () => {
   isLoading.value = true
@@ -88,13 +89,21 @@ onShow(async () => {
           <text class="overview-card__label">最近状态探索</text>
           <template v-if="hasAssessment">
             <view class="overview-card__score-row">
-              <text class="overview-card__score">{{ overviewScore }}</text>
-              <text class="overview-card__unit">分</text>
+              <view class="overview-card__score-value">
+                <text class="overview-card__score">{{ overviewScore }}</text>
+                <text class="overview-card__unit">分</text>
+              </view>
+              <view class="overview-card__retake-wrap">
+                <AppButton variant="secondary" @click="retakeAssessment">重新评估</AppButton>
+              </view>
             </view>
             <text class="overview-card__caption">状态体验概览分 · 仅用于体验反馈</text>
           </template>
           <template v-else>
             <text class="overview-card__empty">从一场自然体验开始，也很好。</text>
+            <view class="overview-card__start-wrap">
+              <AppButton variant="secondary" @click="retakeAssessment">开始状态探索</AppButton>
+            </view>
           </template>
         </view>
       </AppCard>
@@ -237,7 +246,24 @@ onShow(async () => {
 .overview-card__score-row {
   display: flex;
   align-items: baseline;
+  justify-content: space-between;
   margin: var(--space-1) 0;
+}
+
+.overview-card__score-value {
+  display: flex;
+  align-items: baseline;
+}
+
+.overview-card__retake-wrap,
+.overview-card__start-wrap {
+  width: 190rpx;
+}
+
+.overview-card__retake-wrap :deep(.app-button),
+.overview-card__start-wrap :deep(.app-button) {
+  min-height: 64rpx;
+  font-size: var(--font-size-caption);
 }
 
 .overview-card__score {
@@ -255,6 +281,10 @@ onShow(async () => {
 .overview-card__empty {
   margin-top: var(--space-2);
   color: var(--color-text-primary);
+}
+
+.overview-card__start-wrap {
+  margin-top: var(--space-3);
 }
 
 .section-heading {
