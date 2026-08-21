@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { mockCourses, mockRecords } from '@/mock'
 import { dataAdapter } from '@/services/data-adapter'
+import { summarizeGrowth } from '@/services/growth-service'
 
 export const useExperienceStore = defineStore('experience', {
   state: () => ({
@@ -13,6 +14,9 @@ export const useExperienceStore = defineStore('experience', {
     loading: false,
     error: null,
   }),
+  getters: {
+    growthSummary: (state) => summarizeGrowth(state.records),
+  },
   actions: {
     async loadCourses() { this.courses = await dataAdapter.getCourses(); return this.courses },
     async loadCourse(courseId) {
