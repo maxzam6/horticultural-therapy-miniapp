@@ -47,10 +47,6 @@ async function loadPage() {
     experienceStore.loadRecords(),
   ]
 
-  // B 侧可提供显式加载 Action；若采用 Store getter，则随 records 一起更新。
-  if (typeof experienceStore.loadGrowthSummary === 'function') {
-    requests.push(experienceStore.loadGrowthSummary())
-  }
   if (!assessmentStore.result) requests.push(assessmentStore.loadLatestResult())
 
   await Promise.allSettled(requests)
@@ -180,7 +176,7 @@ onShow(loadPage)
           <text class="info-section__toggle">{{ expandedSection === 'about' ? '−' : '+' }}</text>
         </view>
         <text v-if="expandedSection === 'about'" class="info-section__body">
-          园艺疗法借助植物、自然环境与园艺活动，帮助人们觉察当下、舒缓情绪并建立与自然的连接。本小程序用于展示一次轻量、可记录的数字化体验流程。
+          园艺疗法借助植物、自然环境与园艺活动，帮助人们觉察当下、舒缓情绪并建立与自然的连接。本小程序用于展示一次轻量、可记录的数字化体验流程。本项目为展示型辅助体验，不替代专业医疗建议。
         </text>
       </view>
       <view class="info-section info-section--bordered">
