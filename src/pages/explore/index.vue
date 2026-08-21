@@ -26,6 +26,18 @@ const nickname = computed(() => userStore.user?.nickname || '自然体验者')
 const overviewScore = computed(() => assessmentStore.result?.experienceOverviewScore)
 const hasAssessment = computed(() => Number.isFinite(Number(overviewScore.value)))
 
+function displayText(value, fallback) {
+  if (typeof value === 'string' || typeof value === 'number') return String(value)
+  if (Array.isArray(value)) {
+    const text = value.map((item) => displayText(item, '')).filter(Boolean).join('、')
+    return text || fallback
+  }
+  if (value && typeof value === 'object') {
+    return displayText(value.label ?? value.title ?? value.name, fallback)
+  }
+  return fallback
+}
+
 const recommendedCourse = computed(() => {
   const resultId = assessmentStore.result?.recommendedCourseId
   const matched = experienceStore.courses.find((course) => (
@@ -94,7 +106,7 @@ onShow(async () => {
                 <text class="overview-card__unit">分</text>
               </view>
               <view class="overview-card__retake-wrap">
-                <AppButton variant="secondary" @click="retakeAssessment">重新评估</AppButton>
+                <button class="overview-card__retake" @click="retakeAssessment">重新评估</button>
               </view>
             </view>
             <text class="overview-card__caption">状态体验概览分 · 仅用于体验反馈</text>
@@ -102,7 +114,7 @@ onShow(async () => {
           <template v-else>
             <text class="overview-card__empty">从一场自然体验开始，也很好。</text>
             <view class="overview-card__start-wrap">
-              <AppButton variant="secondary" @click="retakeAssessment">开始状态探索</AppButton>
+              <button class="overview-card__retake" @click="retakeAssessment">开始状态探索</button>
             </view>
           </template>
         </view>
@@ -117,8 +129,8 @@ onShow(async () => {
     <AppCard v-if="recommendedCourse" interactive padding="none" @click="openGarden">
       <view class="recommendation">
         <view class="recommendation__badge">优先推荐</view>
-        <text class="recommendation__sense">{{ recommendedCourse.senseName }}体验</text>
-        <text class="recommendation__title">{{ recommendedCourse.title }}</text>
+        <text class="recommendation__sense">{{ displayText(recommendedCourse.senseName, '自然') }}体验</text>
+        <text class="recommendation__title">{{ displayText(recommendedCourse.title, '自然体验') }}</text>
         <text class="recommendation__description">
           {{ hasAssessment ? '根据你最近的状态探索，为你匹配一段轻松的自然体验。' : '从触摸与种植开始，用一株小小的多肉感受生命力。' }}
         </text>
@@ -139,7 +151,7 @@ onShow(async () => {
         @click="openGarden"
       >
         <text class="sense-item__icon">{{ senseIcons[course.sense] || '叶' }}</text>
-        <text class="sense-item__name">{{ course.senseName }}</text>
+        <text class="sense-item__name">{{ displayText(course.senseName, '自然体验') }}</text>
       </view>
     </view>
 
@@ -260,11 +272,26 @@ onShow(async () => {
   width: 190rpx;
 }
 
-.overview-card__retake-wrap :deep(.app-button),
-.overview-card__start-wrap :deep(.app-button) {
+.overview-card__retake {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
   min-height: 64rpx;
+  margin: 0;
+  border: 0;
+  border-radius: var(--radius-button);
+  background: var(--color-bg-soft);
+  color: var(--color-primary-deep);
   font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1;
 }
+
+.overview-card__retake::after { border: 0; }
+
+.overview-card__retake:active { opacity: 0.9; transform: scale(0.98); }
 
 .overview-card__score {
   color: var(--color-primary-deep);
