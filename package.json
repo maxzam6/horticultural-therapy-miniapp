@@ -16,6 +16,7 @@
     "check:assessment": "node scripts/check-assessment.mjs",
     "check:experience": "node scripts/check-experience.mjs",
     "check:completeness": "node scripts/check-completeness.mjs",
+    "check:demo": "node scripts/check-demo.mjs",
     "check": "pnpm run build:mp-weixin"
   },
   "dependencies": {
