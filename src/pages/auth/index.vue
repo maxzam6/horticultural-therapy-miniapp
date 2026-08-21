@@ -4,9 +4,11 @@ import AppButton from '@/components/AppButton.vue'
 import AppCard from '@/components/AppCard.vue'
 import { ROUTES } from '@/config/routes'
 import { goTo } from '@/services/navigation'
+import { useAssessmentStore } from '@/stores/assessment'
 import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
+const assessmentStore = useAssessmentStore()
 const loginError = ref('')
 const isSubmitting = ref(false)
 const isBusy = computed(() => isSubmitting.value || userStore.loading)
@@ -16,8 +18,14 @@ async function startMockExperience() {
   isSubmitting.value = true
   loginError.value = ''
   try {
-    await userStore.startMockSession()
-    goTo(ROUTES.PROFILE_SETUP)
+    const user = await userStore.startMockSession()
+    if (!user?.profileCompleted) {
+      goTo(ROUTES.PROFILE_SETUP)
+      return
+    }
+
+    await assessmentStore.loadLatestResult()
+    goTo(assessmentStore.result ? ROUTES.EXPLORE : ROUTES.ASSESSMENT_INTRO)
   } catch {
     loginError.value = '暂时无法开启演示体验，请稍后重试。'
   } finally {

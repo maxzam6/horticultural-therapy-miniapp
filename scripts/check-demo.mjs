@@ -92,6 +92,15 @@ const adapterSource = read('src/services/data-adapter.js')
 assert.match(adapterSource, /VITE_DATA_MODE/, 'VITE_DATA_MODE switch is missing')
 assert.match(adapterSource, /import\.meta\.env\.VITE_DATA_MODE\s*\|\|\s*['"]mock['"]/, 'Mock must remain the default data mode')
 
+const homePage = read('src/pages/home/index.vue')
+assert.match(homePage, /userStore\.loadCurrentUser\(\)/, 'home CTA must resolve the persisted user before routing')
+assert.match(homePage, /profileCompleted/, 'home CTA must distinguish first-time profile setup')
+assert.match(homePage, /assessmentStore\.loadLatestResult\(\)/, 'home CTA must resolve the persisted assessment')
+assert.match(homePage, /ROUTES\.EXPLORE/, 'returning users must be able to enter Explore directly')
+
+const authPage = read('src/pages/auth/index.vue')
+assert.match(authPage, /user\?\.profileCompleted/, 'auth must not reopen profile setup for returning users')
+
 const trackedResult = spawnSync('git', ['ls-files'], { cwd: root, encoding: 'utf8' })
 assert.equal(trackedResult.status, 0, 'git ls-files failed')
 const trackedFiles = trackedResult.stdout.split(/\r?\n/).filter(Boolean)
