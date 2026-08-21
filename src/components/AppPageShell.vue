@@ -17,7 +17,7 @@ defineProps({
   },
   status: {
     type: String,
-    default: '页面骨架已就绪',
+    default: '准备开始体验',
   },
   buttonLabel: {
     type: String,

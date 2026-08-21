@@ -38,7 +38,7 @@ async function loadTask() {
     feedbackMode.value = isCompleted.value || session.value.currentStep >= steps.value.length
     if (isCompleted.value) {
       const record = await experienceStore.loadRecord(session.value.recordId)
-      if (!record) throw new Error('体验 Record 不存在或已失效')
+      if (!record) throw new Error('体验记录不存在或已失效')
       mood.value = record.mood
       feeling.value = record.feeling
     }
@@ -52,7 +52,7 @@ async function loadTask() {
 onLoad((options) => {
   sessionId.value = options?.sessionId ? decodeURIComponent(options.sessionId) : ''
   if (!sessionId.value) {
-    pageError.value = '缺少体验 Session，请返回课程详情重新开始。'
+    pageError.value = '体验信息不完整，请返回课程详情重新开始。'
     pageState.value = 'error'
     return
   }
@@ -157,7 +157,7 @@ async function complete() {
             maxlength="200"
             placeholder="写下此刻想记住的感受"
           />
-          <text class="feedback-card__hint">图片为可选项，本阶段暂不提供真实上传。</text>
+          <text class="feedback-card__hint">图片记录暂未开放，当前可以先写下此刻的感受。</text>
         </AppCard>
 
         <view class="task-page__actions">

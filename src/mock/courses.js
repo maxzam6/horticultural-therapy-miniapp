@@ -3,7 +3,7 @@ const placeholder = ({ id, sense, senseName, title, duration = 15 }) => ({
   subtitle: '一段温和的自然体验正在准备中',
   cover: '/static/illustrations/sensory-garden.jpg',
   duration,
-  description: '课程内容仍为可替换 Mock，当前可先了解体验方向。',
+  description: '体验内容示例，专业内容以项目组最终确认为准。',
   materials: [],
   safetyTips: ['如感到不适，请随时停下并休息。'],
   mindfulnessPrompt: '放慢一点，留意此刻最清晰的一种感受。',
@@ -18,7 +18,7 @@ export const mockCourses = [
     subtitle: '用双手安放一株小小的生命',
     cover: '/static/illustrations/sensory-garden.jpg',
     duration: 20,
-    description: '通过铺土、安放多肉与整理表面，感受土壤、植物和呼吸带来的稳定节奏。本内容为体验 Mock，尚未经过园艺或护理专业审核。',
+    description: '通过铺土、安放多肉与整理表面，感受土壤、植物和呼吸带来的稳定节奏。本内容为体验示例，专业内容以项目组最终确认为准。',
     materials: ['带排水孔的小花盆', '多肉植物一株', '多肉专用土', '铺面石', '小铲或勺子'],
     safetyTips: [
       '操作后及时洗手，避免揉眼或误食土壤、植物。',
