@@ -2,7 +2,6 @@
 import { computed, ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import AppButton from '@/components/AppButton.vue'
-import AppCard from '@/components/AppCard.vue'
 import { ROUTES } from '@/config/routes'
 import { goTo } from '@/services/navigation'
 import { useAssessmentStore } from '@/stores/assessment'
@@ -96,7 +95,7 @@ onShow(async () => {
     </view>
 
     <view class="overview-row">
-      <AppCard padding="compact">
+      <view class="explore-card app-card--compact">
         <view class="overview-card">
           <text class="overview-card__label">最近状态探索</text>
           <template v-if="hasAssessment">
@@ -118,7 +117,7 @@ onShow(async () => {
             </view>
           </template>
         </view>
-      </AppCard>
+      </view>
     </view>
 
     <view class="section-heading">
@@ -126,7 +125,13 @@ onShow(async () => {
       <text class="section-heading__title">今天的自然练习</text>
     </view>
 
-    <AppCard v-if="recommendedCourse" interactive padding="none" @click="openGarden">
+    <view
+      v-if="recommendedCourse"
+      class="explore-card app-card--none recommendation-card"
+      hover-class="recommendation-card--pressed"
+      hover-stay-time="120"
+      @click="openGarden"
+    >
       <view class="recommendation">
         <view class="recommendation__badge">优先推荐</view>
         <text class="recommendation__sense">{{ displayText(recommendedCourse.senseName, '自然') }}体验</text>
@@ -136,7 +141,7 @@ onShow(async () => {
         </text>
         <text class="recommendation__link">去五感花园看看 →</text>
       </view>
-    </AppCard>
+    </view>
 
     <view class="section-heading">
       <text class="section-heading__eyebrow">五感花园</text>
@@ -155,7 +160,7 @@ onShow(async () => {
       </view>
     </view>
 
-    <AppCard padding="compact">
+    <view class="explore-card app-card--compact">
       <view class="mindfulness-card">
         <text class="mindfulness-card__mark">“</text>
         <view>
@@ -163,7 +168,7 @@ onShow(async () => {
           <text class="mindfulness-card__description">慢一点，留意一片叶子的颜色、纹理和呼吸。</text>
         </view>
       </view>
-    </AppCard>
+    </view>
 
     <view class="journey-progress">
       <view class="journey-progress__copy">
@@ -262,6 +267,21 @@ onShow(async () => {
   margin: var(--space-1) 0;
 }
 
+.explore-card {
+  border: 1rpx solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.app-card--compact {
+  padding: var(--space-3);
+}
+
+.app-card--none {
+  padding: 0;
+}
+
 .overview-card__score-value {
   display: flex;
   align-items: baseline;
@@ -335,6 +355,17 @@ onShow(async () => {
   flex-direction: column;
   padding: var(--space-4);
   background: linear-gradient(135deg, var(--color-bg-soft), #f8edd6);
+}
+
+.recommendation-card {
+  overflow: hidden;
+  transition: opacity 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+}
+
+.recommendation-card--pressed {
+  box-shadow: var(--shadow-card-pressed);
+  opacity: 0.96;
+  transform: scale(0.99);
 }
 
 .recommendation__badge {

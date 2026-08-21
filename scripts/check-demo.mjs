@@ -104,6 +104,7 @@ assert.match(authPage, /user\?\.profileCompleted/, 'auth must not reopen profile
 const explorePage = read('src/pages/explore/index.vue')
 assert.match(explorePage, /重新评估/, 'explore must expose a retake assessment entry')
 assert.match(explorePage, /ROUTES\.ASSESSMENT_INTRO/, 'retake assessment must preserve the assessment intro path')
+assert.doesNotMatch(explorePage, /import AppCard|<AppCard\b/, 'explore must avoid the custom card relation path on mini-program runtime')
 
 const trackedResult = spawnSync('git', ['ls-files'], { cwd: root, encoding: 'utf8' })
 assert.equal(trackedResult.status, 0, 'git ls-files failed')
