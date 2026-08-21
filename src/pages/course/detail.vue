@@ -57,7 +57,7 @@ async function startTask() {
   try {
     const session = await experienceStore.startSession(courseId.value)
     const sessionId = session?.id || session?.sessionId
-    if (!sessionId) throw new Error('体验 Session 创建失败，请稍后再试。')
+    if (!sessionId) throw new Error('体验创建失败，请稍后再试。')
     goTo(`${ROUTES.EXPERIENCE_TASK}?sessionId=${encodeURIComponent(sessionId)}`)
   } catch (error) {
     pageError.value = error?.message || '暂时无法开始体验，请稍后再试。'

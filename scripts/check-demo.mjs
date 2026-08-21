@@ -71,6 +71,7 @@ function visibleText(file, source) {
 
 const visibleFiles = [
   ...expectedPages.map((page) => `src/${page}.vue`),
+  'src/components/AppPageShell.vue',
   'src/mock/courses.js',
 ]
 const forbiddenVisibleTerms = [
@@ -100,6 +101,7 @@ const forbiddenTracked = trackedFiles.filter((file) =>
 assert.deepEqual(forbiddenTracked, [], 'build output or private environment files must not be tracked')
 
 const trackedText = trackedFiles
+  .filter((file) => file !== 'scripts/check-demo.mjs')
   .filter((file) => /\.(vue|js|json|ts|mjs)$/.test(file))
   .map((file) => read(file))
   .join('\n')
