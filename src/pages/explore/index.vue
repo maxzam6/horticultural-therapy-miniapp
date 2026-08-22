@@ -46,6 +46,7 @@ const progress = computed(() => {
 })
 
 const openGarden = () => goTo(ROUTES.GARDEN)
+const retakeAssessment = () => goTo(ROUTES.ASSESSMENT_INTRO)
 
 onShow(async () => {
   isLoading.value = true
@@ -88,8 +89,11 @@ onShow(async () => {
           <text class="overview-card__label">最近状态探索</text>
           <template v-if="hasAssessment">
             <view class="overview-card__score-row">
-              <text class="overview-card__score">{{ overviewScore }}</text>
-              <text class="overview-card__unit">分</text>
+              <view class="overview-card__score-value">
+                <text class="overview-card__score">{{ overviewScore }}</text>
+                <text class="overview-card__unit">分</text>
+              </view>
+              <button class="overview-card__retake" @click="retakeAssessment">重新评估</button>
             </view>
             <text class="overview-card__caption">状态体验概览分 · 仅用于体验反馈</text>
           </template>
@@ -237,7 +241,39 @@ onShow(async () => {
 .overview-card__score-row {
   display: flex;
   align-items: baseline;
+  justify-content: space-between;
   margin: var(--space-1) 0;
+}
+
+.overview-card__score-value {
+  display: flex;
+  align-items: baseline;
+}
+
+.overview-card__retake {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 64rpx;
+  margin: 0;
+  padding: 0 28rpx;
+  border: 0;
+  border-radius: var(--radius-button);
+  background: var(--color-bg-soft);
+  color: var(--color-primary-deep);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1;
+}
+
+.overview-card__retake::after {
+  border: 0;
+}
+
+.overview-card__retake:active {
+  opacity: 0.9;
+  transform: scale(0.98);
 }
 
 .overview-card__score {
