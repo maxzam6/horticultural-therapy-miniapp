@@ -12,6 +12,7 @@
     "dev:mp-weixin": "uni -p mp-weixin",
     "build:h5": "uni build",
     "build:mp-weixin": "uni build -p mp-weixin",
+    "build:mp-weixin:demo": "node scripts/build-demo.mjs",
     "check:mock": "node scripts/check-mock.mjs",
     "check:assessment": "node scripts/check-assessment.mjs",
     "check:experience": "node scripts/check-experience.mjs",
