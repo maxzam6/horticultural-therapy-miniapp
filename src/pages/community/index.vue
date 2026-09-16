@@ -41,7 +41,11 @@ const write = () => uni.navigateTo({ url: "/pages/journal/edit" });
       ><text class="eyebrow">一起，与自然靠近</text
       ><text class="title">自然分享空间</text
       ><text class="subtitle">分享一片新叶，也分享今天的心情。</text
-      ><button @click="write">＋ 写自然日记</button></view
+      ><button
+        :disabled="store.member?.membershipStatus !== 'active'"
+        @click="write"
+        >＋ 写自然日记</button
+      ></view
     ><CommunityIdentity @ready="load()" />
     <view v-if="error" class="notice"
       ><text>{{ error }}</text

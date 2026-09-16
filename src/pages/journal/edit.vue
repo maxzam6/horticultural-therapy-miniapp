@@ -113,6 +113,11 @@ async function save() {
     ><text class="heading">留住今天的一点自然</text
     ><text class="hint">默认仅自己可见 · 不计入体验成长次数</text
     ><CommunityIdentity />
+    <text
+      v-if="store.member && store.member.membershipStatus !== 'active'"
+      class="hint"
+      >当前成员状态暂不能保存日记，请先等待批准或联系项目组。</text
+    >
     <input
       v-model="title"
       :disabled="busy"

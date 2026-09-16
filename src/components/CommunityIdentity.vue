@@ -1,11 +1,20 @@
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useCommunityStore } from "@/stores/community";
 const store = useCommunityStore(),
   username = ref("member-a"),
   password = ref(""),
   error = ref(""),
   busy = ref(false);
+const membershipMessage = computed(
+  () =>
+    ({
+      pending: "申请已提交，请等待项目组批准。",
+      active: "成员已启用，可以分享自然日记与参与互动。",
+      posting_disabled: "当前账号暂不能发布或互动，请联系项目组。",
+      disabled: "当前账号已停用，请联系项目组。",
+    })[store.member?.membershipStatus] || "",
+);
 const emit = defineEmits(["ready"]);
 async function connect() {
   if (busy.value) return;
@@ -37,8 +46,7 @@ async function connect() {
       @click="connect"
     >
       {{ busy ? "正在连接" : "连接社区 / 刷新成员状态" }}</button
-    ><text v-if="store.member?.membershipStatus === 'pending'"
-      >申请已提交，请等待项目组批准。</text
+    ><text v-if="membershipMessage">{{ membershipMessage }}</text
     ><text v-if="error">{{ error }}</text></view
   >
 </template>
