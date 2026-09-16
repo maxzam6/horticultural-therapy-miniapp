@@ -8,6 +8,8 @@ import { goTo } from '@/services/navigation'
 import { useAssessmentStore } from '@/stores/assessment'
 import { useExperienceStore } from '@/stores/experience'
 import { useUserStore } from '@/stores/user'
+import { communityMode } from '@/services/community-api'
+import CommunityIdentity from '@/components/CommunityIdentity.vue'
 
 const assessmentStore = useAssessmentStore()
 const experienceStore = useExperienceStore()
@@ -15,6 +17,10 @@ const userStore = useUserStore()
 
 const isLoading = ref(false)
 const expandedSection = ref('about')
+const isEditingNickname = ref(false)
+const isSavingNickname = ref(false)
+const nicknameDraft = ref('')
+const nicknameError = ref('')
 
 const user = computed(() => userStore.user)
 const nickname = computed(() => user.value?.nickname || '自然体验者')
@@ -57,6 +63,42 @@ function openRecords() {
   goTo(ROUTES.RECORDS)
 }
 
+function startNicknameEdit() {
+  nicknameDraft.value = nickname.value
+  nicknameError.value = ''
+  isEditingNickname.value = true
+}
+
+function cancelNicknameEdit() {
+  if (isSavingNickname.value) return
+  isEditingNickname.value = false
+  nicknameError.value = ''
+}
+
+async function saveNickname() {
+  if (isSavingNickname.value) return
+  const nextNickname = nicknameDraft.value.trim()
+  if (nextNickname.length < 1 || nextNickname.length > 20) {
+    nicknameError.value = '请输入 1–20 个字符的昵称'
+    return
+  }
+  if (nextNickname === nickname.value) {
+    isEditingNickname.value = false
+    return
+  }
+
+  isSavingNickname.value = true
+  nicknameError.value = ''
+  try {
+    await userStore.saveProfile({ nickname: nextNickname })
+    isEditingNickname.value = false
+  } catch {
+    nicknameError.value = '昵称保存失败，请稍后重试。'
+  } finally {
+    isSavingNickname.value = false
+  }
+}
+
 function toggleSection(section) {
   expandedSection.value = expandedSection.value === section ? '' : section
 }
@@ -84,11 +126,29 @@ onShow(loadPage)
       <AppCard padding="compact">
         <view class="profile-card">
           <view class="profile-card__avatar">叶</view>
-          <view class="profile-card__content">
+          <view v-if="!isEditingNickname" class="profile-card__content">
             <text class="profile-card__name">{{ nickname }}</text>
             <text class="profile-card__meta">{{ ageLabel }}</text>
           </view>
-          <text class="profile-card__tag">自然体验者</text>
+          <view v-else class="profile-card__editor">
+            <input
+              v-model="nicknameDraft"
+              class="profile-card__input"
+              maxlength="20"
+              focus
+              confirm-type="done"
+              placeholder="请输入新昵称"
+              @confirm="saveNickname"
+            />
+            <text v-if="nicknameError" class="profile-card__error">{{ nicknameError }}</text>
+            <view class="profile-card__actions">
+              <button class="profile-card__action" :disabled="isSavingNickname" @click="cancelNicknameEdit">取消</button>
+              <button class="profile-card__action profile-card__action--primary" :loading="isSavingNickname" @click="saveNickname">
+                保存
+              </button>
+            </view>
+          </view>
+          <button v-if="!isEditingNickname" class="profile-card__edit" @click="startNicknameEdit">改昵称</button>
         </view>
       </AppCard>
     </view>
@@ -185,12 +245,13 @@ onShow(loadPage)
           <text class="info-section__toggle">{{ expandedSection === 'privacy' ? '−' : '+' }}</text>
         </view>
         <text v-if="expandedSection === 'privacy'" class="info-section__body">
-          本展示版本仅使用体验所需的昵称、档案、评估和体验记录。相关内容用于本次展示与答辩，不用于医疗诊断、商业运营或对外公开。
+          {{communityMode==='mock'?'本展示版本的昵称、档案、测评和体验印记保存在本机，不用于医学诊断或商业运营。':'昵称和日记保存到云端；自然档案、测评与体验印记保存在本机。日记默认私密，主动同步的图文和评论经审核后向获批社区成员展示，公开作品可被项目组选入每周精选。取消同步将撤回原帖及精选引用，但无法收回他人已保存的内容。后台不能浏览未同步日记或测评结果。'}}
         </text>
       </view>
     </AppCard>
 
     <view v-if="isLoading" class="sync-note">正在同步你的自然旅程…</view>
+    <CommunityIdentity v-if="communityMode!=='mock'" @ready="loadPage" />
     <AppButton variant="secondary" @click="openRecords">去看看我的记录</AppButton>
   </view>
 </template>
@@ -293,6 +354,65 @@ onShow(loadPage)
 .profile-card__content {
   flex: 1;
   flex-direction: column;
+}
+
+.profile-card__editor {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.profile-card__input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 68rpx;
+  padding: 0 var(--space-2);
+  border: 1rpx solid var(--color-primary);
+  border-radius: var(--radius-tag);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--font-size-body);
+}
+
+.profile-card__error {
+  margin-top: 6rpx;
+  color: var(--color-error);
+  font-size: var(--font-size-label);
+}
+
+.profile-card__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.profile-card__edit,
+.profile-card__action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 60rpx;
+  margin: 0;
+  padding: 0 20rpx;
+  border: 0;
+  border-radius: var(--radius-button);
+  background: var(--color-bg-soft);
+  color: var(--color-primary-deep);
+  font-size: var(--font-size-label);
+  line-height: 1;
+}
+
+.profile-card__edit::after,
+.profile-card__action::after {
+  border: 0;
+}
+
+.profile-card__action--primary {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
 }
 
 .profile-card__name,

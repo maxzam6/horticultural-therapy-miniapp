@@ -1,8 +1,16 @@
 <script setup>
+import { ref } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
 import AppButton from '@/components/AppButton.vue'
 import AppCard from '@/components/AppCard.vue'
 import { ROUTES } from '@/config/routes'
 import { goTo } from '@/services/navigation'
+import { useAssessmentStore } from '@/stores/assessment'
+import { useUserStore } from '@/stores/user'
+
+const userStore = useUserStore()
+const assessmentStore = useAssessmentStore()
+const startRoute = ref(ROUTES.AUTH)
 
 const values = [
   { icon: '叶', title: '自然连接', description: '在植物与日常之间，重新发现细小而真实的感受。' },
@@ -11,13 +19,39 @@ const values = [
 ]
 
 const quickEntries = [
-  { label: '开始体验', description: '建立自然档案', route: ROUTES.AUTH },
+  { label: '开始体验', description: '从此刻的状态开始', action: 'start' },
   { label: '探索花园', description: '发现五感活动', route: ROUTES.EXPLORE },
   { label: '自然旅程', description: '回看体验记录', route: ROUTES.RECORDS },
 ]
 
-const startExperience = () => goTo(ROUTES.AUTH)
-const openEntry = (route) => goTo(route)
+async function resolveStartRoute() {
+  try {
+    if (!userStore.user) await userStore.loadCurrentUser()
+    if (!userStore.user?.profileCompleted) {
+      startRoute.value = ROUTES.AUTH
+      return startRoute.value
+    }
+
+    await assessmentStore.loadLatestResult()
+    startRoute.value = assessmentStore.result ? ROUTES.EXPLORE : ROUTES.ASSESSMENT_INTRO
+  } catch {
+    startRoute.value = ROUTES.AUTH
+  }
+  return startRoute.value
+}
+
+onShow(() => {
+  void resolveStartRoute()
+})
+
+async function startExperience() {
+  goTo(await resolveStartRoute())
+}
+
+function openEntry(entry) {
+  if (entry.action === 'start') return startExperience()
+  return goTo(entry.route)
+}
 </script>
 
 <template>
@@ -64,7 +98,7 @@ const openEntry = (route) => goTo(route)
           :key="entry.label"
           interactive
           padding="compact"
-          @click="openEntry(entry.route)"
+          @click="openEntry(entry)"
         >
           <view class="entry-card">
             <view>

@@ -47,6 +47,7 @@ const storeSource = fs.readFileSync(new URL('../src/stores/experience.js', impor
 assert.match(storeSource, /growthSummary:\s*\(state\)\s*=>\s*summarizeGrowth\(state\.records\)/, 'Store must expose the shared growth summary')
 
 const communityPage = fs.readFileSync(new URL('../src/pages/community/index.vue', import.meta.url), 'utf8')
-assert.match(communityPage, /自然分享空间，未来开放。/, 'P14 future-space copy is required')
-assert.doesNotMatch(communityPage, /发帖|评论|点赞|收藏|私信|关注|input|textarea|button/, 'P14 must not expose social interactions')
+assert.match(communityPage, /store\.loadPosts/, 'P14 must read posts through community Store')
+assert.doesNotMatch(communityPage, /私信|关注|@\/mock|services\/storage/, 'P14 must not add private messaging or direct persistence')
+assert.match(communityPage, /waterfall/, 'P14 must retain the two-column feed')
 console.log('Product completeness check passed.')

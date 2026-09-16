@@ -6,6 +6,9 @@ import AppStateView from '@/components/AppStateView.vue'
 import { ROUTES } from '@/config/routes'
 import { goTo } from '@/services/navigation'
 import { useExperienceStore } from '@/stores/experience'
+import { useCommunityStore } from '@/stores/community'
+import CommunityIdentity from '@/components/CommunityIdentity.vue'
+import RecordShare from '@/components/RecordShare.vue'
 
 const senseNames = { visual: '视觉', touch: '触觉', smell: '嗅觉', taste: '味觉', hearing: '听觉' }
 const experienceStore = useExperienceStore()
@@ -13,6 +16,16 @@ const pageState = ref('loading')
 const pageError = ref('')
 const records = computed(() => experienceStore.records)
 const summary = computed(() => experienceStore.growthSummary)
+const community = useCommunityStore()
+const journalError = ref('')
+const filter = ref('all')
+const mixed = computed(() => [
+  ...(filter.value === 'journal' ? [] : records.value.map(r => ({...r, kind:'experience',date:r.completedAt}))),
+  ...(filter.value === 'experience' ? [] : community.journals.map(r => ({...r, kind:'journal',date:r.createdAt}))),
+].sort((a,b)=>new Date(b.date)-new Date(a.date)))
+async function loadJournals(more=false){journalError.value='';try{await community.loadJournals(more)}catch(e){journalError.value=e.message}}
+const newJournal=()=>goTo(ROUTES.JOURNAL_EDIT)
+const openJournal=id=>goTo(`${ROUTES.JOURNAL_DETAIL}?journalId=${encodeURIComponent(id)}`)
 
 function formatDate(value) {
   const date = new Date(value)
@@ -33,6 +46,7 @@ async function load() {
 }
 
 onShow(load)
+onShow(()=>loadJournals())
 
 const openRecord = (recordId) => goTo(
   `${ROUTES.IMPRINT_DETAIL}?recordId=${encodeURIComponent(recordId)}`,
@@ -46,6 +60,7 @@ const openMine = () => goTo(ROUTES.MINE)
     <view class="records-hero">
       <text class="records-hero__eyebrow">自然记录</text>
       <text class="records-hero__title">我的自然旅程</text>
+      <AppButton variant="secondary" @click="newJournal">＋ 写自然日记</AppButton>
       <text class="records-hero__description">每一次认真感受，都在这里长成一枚自然印记。</text>
     </view>
 
@@ -86,30 +101,37 @@ const openMine = () => goTo(ROUTES.MINE)
       <AppButton @click="explore">去探索</AppButton>
     </view>
 
-    <template v-else>
+    <template v-if="pageState !== 'loading'">
+      <CommunityIdentity @ready="loadJournals()" />
+      <view class="filters"><button @click="filter='all'">全部</button><button @click="filter='experience'">体验</button><button @click="filter='journal'">日常</button></view>
+      <view v-if="journalError"><text>{{journalError}}</text><button @click="loadJournals()">重试日记</button></view>
       <view class="section-heading">
         <text class="section-heading__title">历史印记</text>
         <text class="section-heading__count">{{ records.length }} 次体验</text>
       </view>
       <view class="record-list">
         <view
-          v-for="record in records"
+          v-for="record in mixed"
           :key="record.id"
           class="record-card"
-          @click="openRecord(record.id)"
+          @click="record.kind==='journal'?openJournal(record.id):openRecord(record.id)"
         >
           <view class="record-card__topline">
-            <text class="record-card__sense">{{ senseNames[record.sense] || record.sense || '自然' }}体验</text>
-            <text class="record-card__date">{{ formatDate(record.completedAt) }}</text>
+            <text class="record-card__sense">{{ record.kind==='journal'?'自然日记':(senseNames[record.sense] || record.sense || '自然')+'体验' }}</text>
+            <text class="record-card__date">{{ formatDate(record.date) }}</text>
           </view>
-          <text class="record-card__title">{{ record.courseTitle }}</text>
-          <view class="record-card__meta">
+          <image v-if="record.kind==='journal'&&community.images[record.assetIds[0]]" :src="community.images[record.assetIds[0]]" mode="aspectFill" class="journal-cover" />
+          <text class="record-card__title">{{ record.courseTitle || record.title }}</text>
+          <view v-if="record.kind==='experience'" class="record-card__meta">
             <text>心情 · {{ record.mood || '未记录' }}</text>
             <text>{{ Number(record.duration) || 0 }} 分钟</text>
           </view>
-          <text class="record-card__action">查看自然印记 →</text>
+          <text class="record-card__action">查看记录 →</text>
+          <view v-if="record.kind==='experience'" @click.stop><RecordShare :record="record" /></view>
+          <text v-else class="record-card__action">查看日记，可选择同步上传社区</text>
         </view>
       </view>
+      <button v-if="community.journalCursor" @click="loadJournals(true)">加载更多日记</button>
     </template>
 
     <view class="mine-entry">
@@ -123,6 +145,7 @@ const openMine = () => goTo(ROUTES.MINE)
 </template>
 
 <style lang="scss" scoped>
+.filters{display:flex;gap:12rpx;margin:24rpx 0}.filters button{flex:1;font-size:26rpx;color:#506a45;background:#fffdf8}.journal-cover{width:100%;height:240rpx;border-radius:20rpx;margin-top:18rpx}
 .records-page { padding-top: calc(var(--space-4) + env(safe-area-inset-top)); padding-bottom: calc(150rpx + env(safe-area-inset-bottom)); }
 .records-hero { display: flex; flex-direction: column; padding: var(--space-3) var(--space-1) var(--space-5); }
 .records-hero__eyebrow { color: var(--color-primary); font-size: var(--font-size-caption); font-weight: var(--font-weight-semibold); letter-spacing: 4rpx; }

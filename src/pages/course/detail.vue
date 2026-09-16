@@ -156,7 +156,7 @@ async function startTask() {
       </AppCard>
 
       <AppStateView v-if="pageError" state="error" :description="pageError" />
-      <AppButton :loading="isStarting" @click="startTask">开始体验</AppButton>
+      <AppButton :loading="isStarting" :disabled="!steps.length" @click="startTask">{{steps.length?'开始体验':'内容准备中'}}</AppButton>
     </template>
   </view>
 </template>
