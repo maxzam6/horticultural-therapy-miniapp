@@ -19,9 +19,9 @@ const coursePresentation = {
   hearing: { icon: '听', tagline: '听见风与叶子的节奏', duration: '约 15 分钟', tone: 'mist' },
 }
 
-const courses = computed(() => experienceStore.courses.slice(0, 5))
+const courses = computed(() => experienceStore.courses)
 const recommendedCourse = computed(() => (
-  courses.value.find((course) => course.id === 'course-succulent') || courses.value[0]
+  courses.value.find((course) => course.isDefault) || courses.value.find((course) => course.id === 'course-succulent') || courses.value[0]
 ))
 
 function presentationFor(course) {
@@ -46,7 +46,7 @@ onShow(loadGarden)
 
 const openCourse = (courseId) => {
   experienceStore.selectCourse(courseId)
-  goTo(`${ROUTES.COURSE_DETAIL}?id=${courseId}`)
+  goTo(`${ROUTES.COURSE_DETAIL}?id=${encodeURIComponent(courseId)}`)
 }
 </script>
 
@@ -137,7 +137,7 @@ const openCourse = (courseId) => {
             <view class="course-card__copy">
               <text class="course-card__title">{{ course.title }}</text>
               <text class="course-card__description">{{ presentationFor(course).tagline }}</text>
-              <text class="course-card__duration">{{ presentationFor(course).duration }}</text>
+              <text class="course-card__duration">约 {{course.duration}} 分钟</text>
             </view>
             <text class="course-card__action">→</text>
           </view>

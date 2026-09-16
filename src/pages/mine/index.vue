@@ -8,6 +8,8 @@ import { goTo } from '@/services/navigation'
 import { useAssessmentStore } from '@/stores/assessment'
 import { useExperienceStore } from '@/stores/experience'
 import { useUserStore } from '@/stores/user'
+import { communityMode } from '@/services/community-api'
+import CommunityIdentity from '@/components/CommunityIdentity.vue'
 
 const assessmentStore = useAssessmentStore()
 const experienceStore = useExperienceStore()
@@ -243,12 +245,13 @@ onShow(loadPage)
           <text class="info-section__toggle">{{ expandedSection === 'privacy' ? '−' : '+' }}</text>
         </view>
         <text v-if="expandedSection === 'privacy'" class="info-section__body">
-          本展示版本仅使用体验所需的昵称、档案、评估和体验记录。相关内容用于本次展示与答辩，不用于医疗诊断、商业运营或对外公开。
+          {{communityMode==='mock'?'本展示版本的昵称、档案、测评和体验印记保存在本机，不用于医学诊断或商业运营。':'昵称和日记保存到云端；自然档案、测评与体验印记保存在本机。日记默认私密，主动同步的图文和评论经审核后向获批社区成员展示，公开作品可被项目组选入每周精选。取消同步将撤回原帖及精选引用，但无法收回他人已保存的内容。后台不能浏览未同步日记或测评结果。'}}
         </text>
       </view>
     </AppCard>
 
     <view v-if="isLoading" class="sync-note">正在同步你的自然旅程…</view>
+    <CommunityIdentity v-if="communityMode!=='mock'" @ready="loadPage" />
     <AppButton variant="secondary" @click="openRecords">去看看我的记录</AppButton>
   </view>
 </template>

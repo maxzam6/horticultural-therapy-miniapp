@@ -7,6 +7,7 @@ import AppStateView from '@/components/AppStateView.vue'
 import { ROUTES } from '@/config/routes'
 import { goTo } from '@/services/navigation'
 import { useExperienceStore } from '@/stores/experience'
+import RecordShare from '@/components/RecordShare.vue'
 
 const experienceStore = useExperienceStore()
 const recordId = ref('')
@@ -126,6 +127,7 @@ const goBack = () => uni.navigateBack()
       </view>
 
       <view class="imprint-actions">
+        <RecordShare :record="record" />
         <AppButton @click="viewRecords">查看我的记录</AppButton>
         <AppButton variant="secondary" @click="continueExplore">继续探索</AppButton>
       </view>

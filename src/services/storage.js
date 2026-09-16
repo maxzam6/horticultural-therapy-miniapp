@@ -25,7 +25,7 @@ export function setStorage(key, value) {
     return true
   } catch (error) {
     console.warn(`[园艺疗法] storage write failed: ${key}`, error)
-    return false
+    throw new Error('本机保存失败，请检查存储空间后重试')
   }
 }
 

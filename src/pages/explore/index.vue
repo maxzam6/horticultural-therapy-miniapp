@@ -32,6 +32,7 @@ const recommendedCourse = computed(() => {
     course.id === resultId || String(course.id) === String(resultId)
   ))
   return matched
+    || experienceStore.courses.find((course) => course.isDefault)
     || experienceStore.courses.find((course) => course.id === 'course-succulent')
     || experienceStore.courses[0]
 })

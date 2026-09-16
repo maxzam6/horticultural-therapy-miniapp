@@ -13,6 +13,9 @@ export const ROUTES = Object.freeze({
   RECORDS: '/pages/records/index',
   COMMUNITY: '/pages/community/index',
   MINE: '/pages/mine/index',
+  JOURNAL_EDIT: '/pages/journal/edit',
+  JOURNAL_DETAIL: '/pages/journal/detail',
+  POST_DETAIL: '/pages/community/detail',
 })
 
 export const TAB_ROUTES = new Set([

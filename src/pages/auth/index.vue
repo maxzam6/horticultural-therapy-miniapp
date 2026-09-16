@@ -6,6 +6,9 @@ import { ROUTES } from '@/config/routes'
 import { goTo } from '@/services/navigation'
 import { useAssessmentStore } from '@/stores/assessment'
 import { useUserStore } from '@/stores/user'
+import { communityMode } from '@/services/community-api'
+import CommunityIdentity from '@/components/CommunityIdentity.vue'
+const connectedMode = communityMode !== 'mock'
 
 const userStore = useUserStore()
 const assessmentStore = useAssessmentStore()
@@ -52,7 +55,7 @@ async function startMockExperience() {
     <view class="intro">
       <text class="intro__title">留住每一次自然体验</text>
       <text class="intro__description">
-        开启演示身份后，你的自然档案、状态探索和体验记录会保存在本机，方便完整展示旅程。
+        {{connectedMode?'自然档案、状态探索和体验印记保存在本机；日记保存在云端，只有主动同步的图文才公开到社区。':'开启演示身份后，自然档案、状态探索和体验记录会保存在本机。'}}
       </text>
     </view>
 
@@ -76,8 +79,8 @@ async function startMockExperience() {
         <view class="identity-card__avatar">芽</view>
         <view class="identity-card__copy">
           <text class="identity-card__label">当前体验方式</text>
-          <text class="identity-card__title">演示身份</text>
-          <text class="identity-card__description">无需授权，不会发起真实微信登录</text>
+          <text class="identity-card__title">{{connectedMode?'云端成员身份':'演示身份'}}</text>
+          <text class="identity-card__description">{{connectedMode?'社区仅向经批准的项目成员开放':'无需授权，不会发起真实微信登录'}}</text>
         </view>
       </view>
     </AppCard>
@@ -85,10 +88,11 @@ async function startMockExperience() {
     <text v-if="loginError" class="error-message" role="alert">{{ loginError }}</text>
 
     <view class="auth-actions">
+      <CommunityIdentity v-if="connectedMode" />
       <AppButton :loading="isBusy" :disabled="isBusy" @click="startMockExperience">
-        {{ isBusy ? '正在开启…' : '使用演示身份继续' }}
+        {{ isBusy ? '正在开启…' : connectedMode?'继续自然体验':'使用演示身份继续' }}
       </AppButton>
-      <text class="privacy-note">继续即表示你已了解：本项目仅用于大创展示，体验数据仅保存在本机。</text>
+      <text class="privacy-note">{{connectedMode?'继续即表示你了解：云端保存成员身份和日记，公开图文与评论需审核；测评结果不会同步到社区。':'继续即表示你已了解：本项目仅用于大创展示，体验数据仅保存在本机。'}}</text>
     </view>
   </view>
 </template>

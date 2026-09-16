@@ -32,7 +32,8 @@ export const useUserStore = defineStore('user', {
       }
     },
     async saveProfile(profile) {
-      this.user = await dataAdapter.saveUserProfile({ ...this.user, ...profile })
+      const completed = Boolean(this.user?.profileCompleted || (profile.ageRange && profile.gardenExperience && profile.goals?.length))
+      this.user = await dataAdapter.saveUserProfile({ ...this.user, ...profile, profileCompleted: completed })
     },
     resetUser() {
       this.user = null

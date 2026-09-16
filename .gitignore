@@ -23,6 +23,8 @@ Thumbs.db
 *.tmp
 *.temp
 coverage/
+.local-community/
+test-results/
 
 # Unused scaffold asset
 src/static/logo.png

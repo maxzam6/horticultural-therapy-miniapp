@@ -1,9 +1,11 @@
 <script>
 import { clearDemoStorage } from '@/services/storage'
+import { clearImageCache } from '@/services/community-api'
 
 export default {
   onLaunch() {
-    if (import.meta.env.VITE_RESET_DEMO_ON_LAUNCH === 'true') {
+    clearImageCache()
+    if (import.meta.env.VITE_RESET_DEMO_ON_LAUNCH === 'true' && (!import.meta.env.VITE_DATA_MODE || import.meta.env.VITE_DATA_MODE === 'mock')) {
       clearDemoStorage()
       console.info('[园艺疗法] Demo storage reset for a fresh-user presentation')
     }

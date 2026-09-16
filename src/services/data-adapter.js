@@ -5,6 +5,7 @@ import {
   mockUser,
 } from '@/mock'
 import { getStorage, setStorage, STORAGE_KEYS } from './storage'
+import { createCloudAdapter } from './cloud-adapter'
 
 const clone = (value) => JSON.parse(JSON.stringify(value))
 const realAdapterError = () => new Error('Real Adapter尚未配置')
@@ -22,7 +23,7 @@ const mockAdapter = {
     return user
   },
   async saveUserProfile(profile) {
-    const user = { ...clone(mockUser), ...clone(profile), profileCompleted: true }
+    const user = { ...getStorage(STORAGE_KEYS.user, clone(mockUser)), ...clone(profile) }
     await setStorage(STORAGE_KEYS.user, user)
     return user
   },
@@ -150,6 +151,8 @@ const realAdapter = Object.fromEntries([
 let selectedAdapter = mockAdapter
 if (dataMode === 'real') {
   selectedAdapter = realAdapter
+} else if (dataMode === 'cloud' || dataMode === 'local') {
+  selectedAdapter = createCloudAdapter(mockAdapter)
 } else if (dataMode !== 'mock') {
   if (import.meta.env.DEV) console.warn(`[园艺疗法] 未知 VITE_DATA_MODE: ${dataMode}，开发环境回退 Mock Adapter`)
 }

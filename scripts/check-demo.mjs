@@ -23,6 +23,9 @@ const expectedPages = [
   'pages/records/index',
   'pages/community/index',
   'pages/mine/index',
+  'pages/journal/edit',
+  'pages/journal/detail',
+  'pages/community/detail',
 ]
 const expectedTabs = [
   'pages/home/index',
@@ -32,7 +35,7 @@ const expectedTabs = [
   'pages/mine/index',
 ]
 
-assert.deepEqual(pageConfig.pages.map((page) => page.path), expectedPages, 'the 14-page set or order changed')
+assert.deepEqual(pageConfig.pages.map((page) => page.path), expectedPages, 'the approved 17-page set or order changed')
 assert.deepEqual(pageConfig.tabBar.list.map((tab) => tab.pagePath), expectedTabs, 'the 5-tab set or order changed')
 
 for (const page of expectedPages) {
@@ -61,6 +64,9 @@ assert.doesNotMatch(allSource, /balanceIndex/, 'balanceIndex must not return to 
 assert.doesNotMatch(allSource, /https?:\/\//i, 'source must not depend on external business resource URLs')
 
 function visibleText(file, source) {
+  // A mode comparison is executable code, not a label shown to a user.
+  // Keep the ban for real literal UI copy (including dynamic messages).
+  source = source.replace(/communityMode\s*(?:===|!==)\s*['"]mock['"]/g, 'connectedMode')
   if (file.endsWith('.vue')) {
     const template = source.match(/<template(?:\s[^>]*)?>([\s\S]*?)<\/template>/i)?.[1] || ''
     const literals = [...source.matchAll(/(['"`])([\s\S]*?)\1/g)].map((match) => match[2])
@@ -116,4 +122,4 @@ const trackedText = trackedFiles
   .join('\n')
 assert.doesNotMatch(trackedText, /appSecret|secretKey|cloudBaseEnv|databasePassword/i, 'private credentials must not be tracked')
 
-console.log('Demo delivery check passed: 14 pages, 5 tabs, frozen routes, Mock default, no release leakage.')
+console.log('Delivery check passed: 17 pages, 5 tabs, original core routes, Mock default, no release leakage.')

@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia'
 import { mockCourses, mockRecords } from '@/mock'
-import { dataAdapter } from '@/services/data-adapter'
+import { dataAdapter, dataMode } from '@/services/data-adapter'
 import { summarizeGrowth } from '@/services/growth-service'
 
 export const useExperienceStore = defineStore('experience', {
   state: () => ({
-    courses: mockCourses,
-    records: mockRecords,
+    courses: dataMode === 'mock' ? mockCourses : [],
+    records: dataMode === 'mock' ? mockRecords : [],
     activeSession: null,
     activeCourse: null,
     activeRecord: null,
@@ -47,7 +47,8 @@ export const useExperienceStore = defineStore('experience', {
         const session = await dataAdapter.getExperienceSession(sessionId)
         if (!session) throw new Error('体验 Session 不存在或已失效')
         this.activeSession = session
-        await this.loadCourse(session.courseId)
+        if (session.courseSnapshot) { this.activeCourse = await dataAdapter.resolveSessionCourse(session.courseSnapshot); this.activeCourseId = session.courseId }
+        else await this.loadCourse(session.courseId)
         return session
       } catch (error) {
         this.error = error
