@@ -1,6 +1,7 @@
 // Pure application service. Identity is supplied ONLY by a trusted runtime, never RPC data.
 const { randomUUID, createHash } = require("node:crypto");
-const copy = (x) => structuredClone(x);
+const { serialize, deserialize } = require("node:v8");
+const copy = (x) => deserialize(serialize(x));
 const fail = (code, message) => {
   throw Object.assign(new Error(message), { code });
 };

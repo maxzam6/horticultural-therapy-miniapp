@@ -1,4 +1,6 @@
 const { createHash } = require("node:crypto");
+const { serialize, deserialize } = require("node:v8");
+const copy = (x) => deserialize(serialize(x));
 const maps = [
   "users",
   "admins",
@@ -57,7 +59,7 @@ function cloudRepository(db) {
           for (let i = 0; i < rows.length; i++) {
             if (!rows[i]) continue;
             const { table, key, value } = rows[i].data;
-            before[ids[i]] = { table, key, value: structuredClone(value) };
+            before[ids[i]] = { table, key, value: copy(value) };
             if (table === "audit") state.audit.push(value);
             else state[table][key] = value;
           }
