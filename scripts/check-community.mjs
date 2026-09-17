@@ -20,7 +20,8 @@ const denied = async (p, code) => assert.rejects(p, (e) => e.code === code);
 const ua = await rpc(a, "identity.ensure"),
   ub = await rpc(b, "identity.ensure");
 await denied(rpc(a, "posts.list"), "MEMBERSHIP");
-await denied(rpc(a, "admin.me"), "FORBIDDEN");
+await denied(rpc(a, "admin.me", { uid: admin.id, role: "super_admin" }), "FORBIDDEN");
+assert.deepEqual(await rpc(admin, "admin.me"), { role: "super_admin" });
 await rpc(admin, "admin.member", {
   memberId: ua.id,
   status: "active",

@@ -627,7 +627,7 @@ function createService({ repository, now = () => new Date().toISOString() }) {
         }
         case "admin.me":
           guardAdmin();
-          result = { role: admin.role, id: uid };
+          result = { role: admin.role };
           break;
         case "admin.list": {
           guardAdmin();
