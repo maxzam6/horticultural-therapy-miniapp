@@ -51,7 +51,13 @@ async function run(fn) {
   try {
     await fn();
   } catch (e) {
-    error.value = e.message;
+    // CloudBase may reject with an object that does not expose `message`.
+    // Keep the failure visible to the operator without leaking credentials.
+    const message =
+      e?.message || e?.error?.message || e?.error_description ||
+      (typeof e === "string" ? e : "");
+    const code = e?.code || e?.error?.code || e?.status;
+    error.value = message || (code ? `云请求失败（${code}）` : "操作失败，请检查账号、密码及云环境配置");
   } finally {
     busy.value = false;
   }
