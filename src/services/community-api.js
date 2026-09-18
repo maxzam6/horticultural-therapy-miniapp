@@ -3,7 +3,7 @@ export const requestId = () =>
   `${Date.now()}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
 // Keep the full wx.cloud.callFunction request comfortably below the gateway limit.
 // Base64 expands binary data and the action/payload JSON adds more bytes.
-const MAX_CLOUD_CALL_BASE64_LENGTH = 320 * 1024;
+const MAX_CLOUD_CALL_BASE64_LENGTH = 420 * 1024;
 let initialized = false;
 let localToken = "";
 // #ifndef MP-WEIXIN
@@ -95,16 +95,30 @@ export async function readPhoto(path) {
         fail: reject,
       }),
     );
-  let base64 = await read(path);
-  if (base64.length > 7 * 1024 * 1024)
-    throw new Error("原照片不能超过5MB，请选择较小照片");
-  for (const quality of [60, 35, 20, 10]) {
-    if (base64.length <= MAX_CLOUD_CALL_BASE64_LENGTH) return base64;
-    const compressed = await uni.compressImage({ src: path, quality });
+  const info = await uni.getImageInfo({ src: path });
+  const attempts = [
+    { maxSide: 1440, quality: 82 },
+    { maxSide: 1280, quality: 68 },
+    { maxSide: 1080, quality: 52 },
+    { maxSide: 960, quality: 38 },
+    { maxSide: 720, quality: 24 },
+  ];
+  let base64 = "";
+  for (const { maxSide, quality } of attempts) {
+    const dimensions =
+      info.width >= info.height
+        ? { compressedWidth: Math.min(info.width, maxSide) }
+        : { compressedHeight: Math.min(info.height, maxSide) };
+    const compressed = await uni.compressImage({
+      src: path,
+      quality,
+      ...dimensions,
+    });
     base64 = await read(compressed.tempFilePath);
+    if (base64.length <= MAX_CLOUD_CALL_BASE64_LENGTH) return base64;
   }
   if (base64.length > MAX_CLOUD_CALL_BASE64_LENGTH)
-    throw new Error("照片压缩后仍较大，请重新选择或拍摄清晰度较低的照片");
+    throw new Error("照片处理后仍较大，请尝试裁剪后重新上传");
   return base64;
   // #endif
   // #ifndef MP-WEIXIN
