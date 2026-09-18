@@ -1,6 +1,9 @@
 export const communityMode = import.meta.env.VITE_DATA_MODE || "mock";
 export const requestId = () =>
   `${Date.now()}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
+// Keep the full wx.cloud.callFunction request comfortably below the gateway limit.
+// Base64 expands binary data and the action/payload JSON adds more bytes.
+const MAX_CLOUD_CALL_BASE64_LENGTH = 320 * 1024;
 let initialized = false;
 let localToken = "";
 // #ifndef MP-WEIXIN
@@ -46,10 +49,31 @@ export async function communityCall(action, payload = {}) {
     wx.cloud.init({ env: import.meta.env.VITE_CLOUD_ENV, traceUser: true });
     initialized = true;
   }
-  const { result } = await wx.cloud.callFunction({
-    name: "garden-api",
-    data: { action, payload },
-  });
+  let response;
+  try {
+    response = await wx.cloud.callFunction({
+      name: "garden-api",
+      data: { action, payload },
+    });
+  } catch (error) {
+    const detail = String(error?.errMsg || error?.message || "");
+    if (/data exceed max size|EXCEED_MAX_PAYLOAD_SIZE/i.test(detail))
+      throw Object.assign(
+        new Error("照片文件较大，请重新选择或拍摄清晰度较低的照片"),
+        { code: "PAYLOAD_TOO_LARGE" },
+      );
+    if (import.meta.env.DEV)
+      console.error("[园艺疗法] 云函数调用失败", {
+        action,
+        code: error?.errCode || error?.code,
+        requestId: error?.requestID || error?.requestId,
+        detail,
+      });
+    throw Object.assign(new Error("云服务暂时没有响应，请稍后重试"), {
+      code: error?.errCode || error?.code || "CLOUD_CALL_FAILED",
+    });
+  }
+  const { result } = response;
   if (!result?.ok)
     throw Object.assign(new Error(result?.error?.message || "云服务暂不可用"), {
       code: result?.error?.code,
@@ -74,13 +98,13 @@ export async function readPhoto(path) {
   let base64 = await read(path);
   if (base64.length > 7 * 1024 * 1024)
     throw new Error("原照片不能超过5MB，请选择较小照片");
-  for (const quality of [70, 45, 25]) {
-    if (base64.length <= 900000) return base64;
+  for (const quality of [60, 35, 20, 10]) {
+    if (base64.length <= MAX_CLOUD_CALL_BASE64_LENGTH) return base64;
     const compressed = await uni.compressImage({ src: path, quality });
     base64 = await read(compressed.tempFilePath);
   }
-  if (base64.length > 900000)
-    throw new Error("照片压缩后仍过大，请选择较小照片");
+  if (base64.length > MAX_CLOUD_CALL_BASE64_LENGTH)
+    throw new Error("照片压缩后仍较大，请重新选择或拍摄清晰度较低的照片");
   return base64;
   // #endif
   // #ifndef MP-WEIXIN

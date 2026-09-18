@@ -98,6 +98,23 @@ const adapterSource = read('src/services/data-adapter.js')
 assert.match(adapterSource, /VITE_DATA_MODE/, 'VITE_DATA_MODE switch is missing')
 assert.match(adapterSource, /import\.meta\.env\.VITE_DATA_MODE\s*\|\|\s*['"]mock['"]/, 'Mock must remain the default data mode')
 
+const communityApiSource = read('src/services/community-api.js')
+assert.match(
+  communityApiSource,
+  /MAX_CLOUD_CALL_BASE64_LENGTH\s*=\s*320\s*\*\s*1024/,
+  'mini-program photos must stay below the safe cloud-call payload budget',
+)
+assert.match(
+  communityApiSource,
+  /data exceed max size\|EXCEED_MAX_PAYLOAD_SIZE/,
+  'cloud payload overflow must be translated into an actionable photo message',
+)
+assert.doesNotMatch(
+  communityApiSource,
+  /base64\.length\s*<=\s*900000|base64\.length\s*>\s*900000/,
+  'the former oversized cloud-call photo threshold must not return',
+)
+
 const homePage = read('src/pages/home/index.vue')
 assert.match(homePage, /userStore\.loadCurrentUser\(\)/, 'home CTA must resolve the persisted user before routing')
 assert.match(homePage, /profileCompleted/, 'home CTA must distinguish first-time profile setup')
