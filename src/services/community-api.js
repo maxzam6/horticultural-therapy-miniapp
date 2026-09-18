@@ -3,7 +3,10 @@ export const requestId = () =>
   `${Date.now()}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
 // Keep the full wx.cloud.callFunction request comfortably below the gateway limit.
 // Base64 expands binary data and the action/payload JSON adds more bytes.
-const MAX_CLOUD_CALL_BASE64_LENGTH = 420 * 1024;
+// The image is carried inside a JSON/text cloud-function request. Keep the
+// encoded image below the platform's 100 KB text-body ceiling, with room for
+// action, request metadata and JSON escaping.
+const MAX_CLOUD_CALL_BASE64_LENGTH = 72 * 1024;
 let initialized = false;
 let localToken = "";
 // #ifndef MP-WEIXIN
@@ -97,11 +100,12 @@ export async function readPhoto(path) {
     );
   const info = await uni.getImageInfo({ src: path });
   const attempts = [
-    { maxSide: 1440, quality: 82 },
-    { maxSide: 1280, quality: 68 },
-    { maxSide: 1080, quality: 52 },
-    { maxSide: 960, quality: 38 },
-    { maxSide: 720, quality: 24 },
+    { maxSide: 1280, quality: 72 },
+    { maxSide: 960, quality: 58 },
+    { maxSide: 720, quality: 45 },
+    { maxSide: 600, quality: 32 },
+    { maxSide: 480, quality: 22 },
+    { maxSide: 360, quality: 15 },
   ];
   let base64 = "";
   for (const { maxSide, quality } of attempts) {

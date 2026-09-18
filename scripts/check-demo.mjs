@@ -101,7 +101,7 @@ assert.match(adapterSource, /import\.meta\.env\.VITE_DATA_MODE\s*\|\|\s*['"]mock
 const communityApiSource = read('src/services/community-api.js')
 assert.match(
   communityApiSource,
-  /MAX_CLOUD_CALL_BASE64_LENGTH\s*=\s*420\s*\*\s*1024/,
+  /MAX_CLOUD_CALL_BASE64_LENGTH\s*=\s*72\s*\*\s*1024/,
   'mini-program photos must stay below the safe cloud-call payload budget',
 )
 assert.match(
